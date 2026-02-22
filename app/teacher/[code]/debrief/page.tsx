@@ -12,8 +12,8 @@ import { Loader2 } from 'lucide-react';
 export default function TeacherDebriefPage({ params }: { params: { code: string } }) {
     const router = useRouter();
     const [session, setSession] = useState<Session | null>(null);
-    const [participants, setParticipants] = useState<Participant[]>([]);
-    const [responses, setResponses] = useState<Response[]>([]);
+    const [participants, setParticipants] = useState<(Participant & { id: string })[]>([]);
+    const [responses, setResponses] = useState<(Response & { id: string })[]>([]);
     const [debriefData, setDebriefData] = useState<Record<number, string> | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -48,7 +48,7 @@ export default function TeacherDebriefPage({ params }: { params: { code: string 
     useEffect(() => {
         const q = query(collection(db, 'sessions', params.code, 'responses'));
         const unsub = onSnapshot(q, (snapshot) => {
-            setResponses(snapshot.docs.map(d => ({ ...d.data(), id: d.id } as Response)));
+            setResponses(snapshot.docs.map(d => ({ ...d.data(), id: d.id } as Response & { id: string })));
         });
         return () => unsub();
     }, [params.code]);

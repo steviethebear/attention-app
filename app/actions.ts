@@ -100,3 +100,16 @@ export async function startDebrief(sessionCode: string) {
         return { success: false, error: "Failed to start debrief" };
     }
 }
+
+export async function endSession(sessionCode: string) {
+    try {
+        const sessionRef = adminDb.collection('sessions').doc(sessionCode);
+        await sessionRef.update({
+            status: 'complete',
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("End session error:", error);
+        return { success: false, error: "Failed to end session" };
+    }
+}

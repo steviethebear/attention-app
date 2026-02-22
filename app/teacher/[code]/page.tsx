@@ -9,7 +9,7 @@ import SnippetGrid from '@/components/SnippetGrid';
 import Leaderboard from '@/components/Leaderboard';
 import RoundControls from '@/components/RoundControls';
 import { startRound, endRound, startDebrief } from '@/app/actions';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Monitor } from 'lucide-react';
 
 export default function TeacherSessionDashboard({ params }: { params: { code: string } }) {
     const [session, setSession] = useState<Session | null>(null);
@@ -152,9 +152,20 @@ export default function TeacherSessionDashboard({ params }: { params: { code: st
                             {session.status === 'debrief' && 'Debrief'}
                         </p>
                     </div>
-                    <div className="text-right">
-                        <span className="text-sm font-bold text-gray-400 uppercase tracking-wider block mb-1">Hidden Rule</span>
-                        <span className="text-indigo-600 font-medium bg-indigo-50 px-3 py-1 rounded-md">{session.rule}</span>
+                    <div className="text-right flex flex-col items-end gap-3">
+                        <a
+                            href={`/projector/${session.code}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
+                        >
+                            <Monitor className="w-4 h-4" />
+                            Open Projector View
+                        </a>
+                        <div>
+                            <span className="text-sm font-bold text-gray-400 uppercase tracking-wider block mb-1">Hidden Rule</span>
+                            <span className="text-indigo-600 font-medium bg-indigo-50 px-3 py-1 rounded-md">{session.rule}</span>
+                        </div>
                     </div>
                 </div>
 
