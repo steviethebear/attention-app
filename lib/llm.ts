@@ -10,9 +10,18 @@ export type SnippetResponse = {
     correct: 'A' | 'B' | 'C' | 'D';
 };
 
-export async function generateSnippets(rule: string, theme?: string, retries = 1, useFallbackModel = false): Promise<SnippetResponse> {
-    // Start with flash-lite, then fallback to heavier flash if requested
-    const modelName = useFallbackModel ? 'gemini-2.5-flash' : 'gemini-2.5-flash-lite';
+const MODEL_CHAIN = [
+    'gemini-3-flash-preview',
+    'gemini-2.5-flash-lite',
+    'gemini-2.5-flash'
+];
+
+export async function generateSnippets(rule: string, theme?: string, modelIndex = 0): Promise<SnippetResponse> {
+    if (modelIndex >= MODEL_CHAIN.length) {
+        throw new Error('All models in the fallback chain failed.');
+    }
+
+    const modelName = MODEL_CHAIN[modelIndex];
     const model = genAI.getGenerativeModel({ model: modelName });
 
     const prompt = `
@@ -54,11 +63,7 @@ Return valid JSON only — no explanation, no markdown:
         return parsed;
     } catch (error) {
         console.error(`Gemini generation error (${modelName}):`, error);
-        if (retries > 0) {
-            console.log(`Retrying snippet generation using fallback model (gemini-2.5-flash)...`);
-            // Fallback model chain: flash-lite -> flash
-            return generateSnippets(rule, theme, retries - 1, true);
-        }
-        throw new Error('Failed to generate snippets after retries');
+        console.log(`Retrying snippet generation using next fallback model...`);
+        return generateSnippets(rule, theme, modelIndex + 1);
     }
 }
