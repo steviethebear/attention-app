@@ -10,6 +10,8 @@ interface RoundControlsProps {
     hasSnippetsReady: boolean;
     isManualMode: boolean;
     onToggleManual: () => void;
+    isAutoStart: boolean;
+    onToggleAutoStart: () => void;
 }
 
 export default function RoundControls({
@@ -22,6 +24,8 @@ export default function RoundControls({
     hasSnippetsReady,
     isManualMode,
     onToggleManual,
+    isAutoStart,
+    onToggleAutoStart,
 }: RoundControlsProps) {
 
     return (
@@ -67,6 +71,18 @@ export default function RoundControls({
                         >
                             Start Round (Manual)
                         </button>
+                    )}
+
+                    {!isManualMode && (
+                        <label className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer w-full md:w-auto pl-2">
+                            <input
+                                type="checkbox"
+                                checked={isAutoStart}
+                                onChange={onToggleAutoStart}
+                                className="w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 cursor-pointer"
+                            />
+                            Auto-start on generation
+                        </label>
                     )}
                 </div>
             )}

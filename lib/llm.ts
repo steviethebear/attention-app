@@ -39,6 +39,7 @@ Requirements:
 - The rule match must be subtle — a student should not spot it immediately
 - Snippets should feel like things a thoughtful person might actually write — not filler
 - Do not label or hint at which snippet matches the rule
+- Do not make the initial snippet the same choice (A, B, C, or D) each time; randomly choose which letter it is
 
 Return valid JSON only — no explanation, no markdown:
 {"A": "...", "B": "...", "C": "...", "D": "...", "correct": "A"}

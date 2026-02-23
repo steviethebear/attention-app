@@ -19,6 +19,7 @@ export default function TeacherSessionDashboard({ params }: { params: { code: st
 
     const [isGenerating, setIsGenerating] = useState(false);
     const [isManualMode, setIsManualMode] = useState(false);
+    const [autoStartNextRound, setAutoStartNextRound] = useState(false);
 
     // Store generated snippets here
     const [previewSnippets, setPreviewSnippets] = useState<{
@@ -87,15 +88,21 @@ export default function TeacherSessionDashboard({ params }: { params: { code: st
             }
 
             if (data.success) {
-                setPreviewSnippets({
-                    snippets: {
-                        A: data.snippets.A,
-                        B: data.snippets.B,
-                        C: data.snippets.C,
-                        D: data.snippets.D,
-                    },
-                    correctOption: data.snippets.correct,
-                });
+                const newSnippets = {
+                    A: data.snippets.A,
+                    B: data.snippets.B,
+                    C: data.snippets.C,
+                    D: data.snippets.D,
+                };
+
+                if (autoStartNextRound) {
+                    await startRound(params.code, newSnippets, data.snippets.correct);
+                } else {
+                    setPreviewSnippets({
+                        snippets: newSnippets,
+                        correctOption: data.snippets.correct,
+                    });
+                }
             } else {
                 alert(data.error);
             }
@@ -185,6 +192,8 @@ export default function TeacherSessionDashboard({ params }: { params: { code: st
                     hasSnippetsReady={!!previewSnippets}
                     isManualMode={isManualMode}
                     onToggleManual={() => setIsManualMode(!isManualMode)}
+                    isAutoStart={autoStartNextRound}
+                    onToggleAutoStart={() => setAutoStartNextRound(!autoStartNextRound)}
                 />
 
                 {/* Teacher Preview */}
