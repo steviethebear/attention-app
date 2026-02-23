@@ -61,7 +61,39 @@ Return valid JSON only — no explanation, no markdown:
             throw new Error('Invalid JSON structure returned from Gemini');
         }
 
-        return parsed;
+        // Mathematically shuffle the snippets to guarantee perfect randomness 
+        // regardless of the LLM's positional biases.
+        const items = [
+            { id: 'A', text: parsed.A },
+            { id: 'B', text: parsed.B },
+            { id: 'C', text: parsed.C },
+            { id: 'D', text: parsed.D }
+        ];
+
+        const originalCorrectId = parsed.correct;
+
+        // Fisher-Yates shuffle
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+
+        const letters: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
+        let newCorrect: 'A' | 'B' | 'C' | 'D' = 'A';
+
+        items.forEach((item, idx) => {
+            if (item.id === originalCorrectId) {
+                newCorrect = letters[idx];
+            }
+        });
+
+        return {
+            A: items[0].text,
+            B: items[1].text,
+            C: items[2].text,
+            D: items[3].text,
+            correct: newCorrect
+        };
     } catch (error) {
         console.error(`Gemini generation error (${modelName}):`, error);
         console.log(`Retrying snippet generation using next fallback model...`);
