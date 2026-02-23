@@ -201,13 +201,15 @@ export default function StudentSessionPage({ params }: { params: { code: string 
                         </div>
 
                         {/* Live Leaderboard */}
-                        <Leaderboard
-                            participants={participants}
-                            currentRoundResponses={responses}
-                            showResults={session.status === 'debrief'}
-                            debriefData={debriefData || undefined}
-                            totalRounds={session.currentRound}
-                        />
+                        {session.status !== 'round_active' && (
+                            <Leaderboard
+                                participants={participants}
+                                currentRoundResponses={responses}
+                                showResults={session.status === 'debrief'}
+                                debriefData={debriefData || undefined}
+                                totalRounds={session.currentRound}
+                            />
+                        )}
                     </>
                 )}
 

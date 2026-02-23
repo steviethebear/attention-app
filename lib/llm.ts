@@ -11,9 +11,9 @@ export type SnippetResponse = {
 };
 
 const MODEL_CHAIN = [
+    'gemini-2.5-flash',
     'gemini-3-flash-preview',
-    'gemini-2.5-flash-lite',
-    'gemini-2.5-flash'
+    'gemini-2.5-flash-lite'
 ];
 
 export async function generateSnippets(rule: string, theme?: string, modelIndex = 0): Promise<SnippetResponse> {
